@@ -7,7 +7,8 @@ up the file in the GridFS store.
 
 For example,
 
-  GET '/gridfs/someobjectid'
+  GET '/gridfs/someobjectid-filename'
+  EX. '/gridfs/4ccd0baa4d54340824000003-avatar.gif'
   
 If the prefix is "gridfs", then the id will be be "someobjectid".
 
