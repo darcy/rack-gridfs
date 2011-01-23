@@ -1,5 +1,6 @@
 require 'timeout'
 require 'mongo'
+require 'uri'
 
 module Rack
   
@@ -17,13 +18,25 @@ module Rack
       }.merge(options)
 
       @app        = app
-      @hostname   = options[:hostname]
-      @port       = options[:port]
-      @database   = options[:database]
+      
+      if options[:uri]
+        uri = URI.parse(options[:uri])
+        raise InvalidScheme.new('must be mongodb') unless uri.scheme == 'mongodb'
+        @hostname   = uri.host
+        @port       = uri.port
+        @database   = uri.path.gsub(/^\//, '')
+        @user       = uri.user
+        @password   = uri.password
+      else
+        @hostname   = options[:hostname]
+        @port       = options[:port]
+        @database   = options[:database]
+        @user       = options[:user]
+        @password   = options[:password]
+      end
+      
       @prefix     = options[:prefix]
       @db         = nil
-      @user       = options[:user]
-      @password   = options[:password]
 
       connect!
     end
